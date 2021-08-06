@@ -10,9 +10,9 @@ connect = sqlite3.connect('CovidStatsdb.sqlite')
 cur = connect.cursor()
 
 
-cur.execute('''CREATE TABLE IF NOT EXISTS Stats (id FLOAT PRIMARY KEY, state_id FLOAT, submission_date TEXT,
-total_deaths FLOAT, new_deaths FLOAT, total_cases FLOAT, new_cases FLOAT, population FLOAT)''')
-cur.execute('''CREATE TABLE IF NOT EXISTS States(id FLOAT NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name TEXT)''')
+cur.execute('''CREATE TABLE IF NOT EXISTS Stats (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, state_id FLOAT, submission_date TEXT,
+total_deaths FLOAT, new_deaths FLOAT, total_cases FLOAT, new_cases FLOAT)''')
+cur.execute('''CREATE TABLE IF NOT EXISTS States(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name TEXT, population INTEGER)''')
 
 url = 'https://data.cdc.gov/resource/9mfq-cb36.json'
 # ?state=STATE&$order=submission_date
