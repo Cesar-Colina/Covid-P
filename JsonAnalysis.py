@@ -21,7 +21,8 @@ url = 'https://data.cdc.gov/resource/9mfq-cb36.json'
 NewYork = dict()
 iterate = dict()
 states = ['NYC', 'CA', 'FL', 'TX', 'SD']
-num = 1
+
+statestateNum = 1
 # 1, 2, 3, 4, 5
 # key values for the states
 
@@ -56,10 +57,10 @@ for state in states:
             newc = js[count]['new_case']
 
             cur.execute('''INSERT INTO Stats (state_id, submission_date, total_deaths, new_deaths, total_cases, new_cases)
-            VALUES (?, ?, ?, ?, ?, ?)''',(num, subd, float(totd), float(newd), float(totc), float(newc), ))
+            VALUES (?, ?, ?, ?, ?, ?)''',(stateNum, subd, float(totd), float(newd), float(totc), float(newc), ))
 
     connect.commit()
     #commit after each state
     #import a time delay to avoid throttling
     time.sleep(1.5)
-    num = num + 1
+    stateNum = stateNum + 1
