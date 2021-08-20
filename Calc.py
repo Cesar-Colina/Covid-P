@@ -24,7 +24,8 @@ else:
 
 
 
-cur.execute('''select Stats.submission_date, Stats.new_cases, States.name, States.population from Stats join States on Stats.state_id = States.id WHERE state_id = ?''', (select, ))
+cur.execute('''select Stats.submission_date, Stats.new_cases, States.name,
+States.population from Stats join States on Stats.state_id = States.id WHERE state_id = ?''', (select, ))
 state_info = cur.fetchall()
 #print(state_info)
 #returns a list of tuples with order (submission_date, new_cases, name, population)
@@ -34,8 +35,6 @@ try:
     wb.save(filename = state + '-covid-per-capita.xlsx')
 except:
     wb = openpyxl.load_workbook(state + '-covid-per-capita.xlsx')
-
-
 
 
 capitaD = list()
@@ -64,24 +63,21 @@ for day in state_info:
     else:
         average = (sum / float(week_counter % 14)) / float(day[3]) * 100000.0
         capitaBW[day[0]] = capitaBW.get(day[0], average)
-#print(capitaD)
-#print(capitaBW)
 
 
 #insert the information into excel
 
 ws = wb.create_sheet()
 ws.title = state + '-Analysis'
-
-try:
-    extra = wb.get_sheet_by_name('Sheet')
-    wb.remove_sheet(extra)
-except:
-    continue
+extra = wb['Sheet']
+wb.remove(extra)
 
 #daily percapita
-rcounter = 1
+rcounter = 2
 capitaIndex = 0
+ws.cell(row = 1, column = 1).value = 'submission_date'
+ws.cell(row = 1, column = 2).value = 'daily-percapita (per 100,000)'
+
 for day in state_info:
     for coln in range(1,3):
         if coln == 1:
@@ -93,7 +89,10 @@ for day in state_info:
 
 
 #biweekly percapita
-rcounter = 1
+rcounter = 2
+ws.cell(row = 1, column = 4).value = 'biweekly-timestamp'
+ws.cell(row = 1, column = 5).value = 'biweekly-percapita (per 100,000)'
+
 for date in capitaBW:
     for coln in range(4,6):
         if coln == 4:
@@ -101,9 +100,6 @@ for date in capitaBW:
         elif coln == 5:
             ws.cell(row = rcounter, column = coln).value = capitaBW[date]
     rcounter = rcounter + 1
-
-
-
 
 
 wb.save(state + '-covid-per-capita.xlsx')
